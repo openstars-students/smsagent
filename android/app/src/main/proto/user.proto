@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option java_multiple_files = true;
+option java_package = "io.grpc.UserSMS";
+option java_outer_classname = "UserHelper";
+option objc_class_prefix = "HLW";
+
+package User;
+
+message SendMessage {
+    string toNumber = 1;
+    string content = 2;
+}
+service SendSMS {
+    rpc Send(stream SendMessage) returns (stream SendMessage) {}
+}
