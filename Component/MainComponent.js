@@ -13,7 +13,8 @@ const styles = StyleSheet.create({
         color:'black',
         fontSize: 15,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop: 10
     },
     rowRight:{
         flex: 4
@@ -25,18 +26,47 @@ export default class MainComponent extends Component{
     constructor(props){
         super(props);
         this.state = {
-            Content: 'Hello! I am MTAZero!',
-            Number: '0899836302',
-            StatusSending: 'Waiting'
+            Server: '',
+            MyNumber: ''
         };
     }
 
     Send = async(number, content) => {
         await SendSMS(number, content);
-        this.setState({StatusSending: 'Sending'});  
     }
 
     render(){
+
+        return (
+            <Container>
+                <View style={{height: 50,marginTop: 20}}>
+                    <Text style={{textAlign:'center', fontSize: 30, fontWeight:'bold', color:'black'}}>
+                            CONNECT SERVER
+                    </Text>
+                </View>
+                <View style={[{flexDirection: 'row'}, styles.row]}>
+                    <Text style={styles.rowLeft}>IP Server</Text> 
+                    <Item regular style={styles.rowRight}>
+                        <Input defaultValue={this.state.Number} keyboardType = 'numeric' value={this.state.Number} onChangeText={(z) => this.setState({Number: z}) }/>
+                    </Item>
+                </View>
+                <View style={[{flexDirection: 'row'}, styles.row]}>
+                    <Text style={styles.rowLeft}>MyNumber</Text> 
+                    <Item regular style={styles.rowRight}>
+                        <Input value={this.state.Content} onChangeText={(z) => this.setState({Content: z}) }/>
+                    </Item>
+                </View>
+                
+                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center', marginTop: 10}}>
+                    <Button iconLeft onPress = {() => this.Send(this.state.Number, this.state.Content)}>
+                        <Icon name='send' />
+                        <Text style={{marginLeft: 10, marginRight: 20, color: 'white', fontSize: 16, fontWeight: 'bold'}}>Connect Server</Text>
+                    </Button>
+                </View>
+
+            </Container>
+        );
+
         return(
             <Container>
                 <View style={{height: 50,marginTop: 20}}>
