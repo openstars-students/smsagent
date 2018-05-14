@@ -2,6 +2,8 @@ import React,{Component} from 'react';
 import {Text, View, StyleSheet} from 'react-native';
 import {Container, Card, Content, Input, Item, Button, Icon} from 'native-base';
 import SendSMS from './SmsAPI/SmsAPI.js';
+import {NativeEventEmitter, NativeModules} from 'react-native';
+import ServerAPI from './ServerAPI/ServerAPI.js';
 
 const styles = StyleSheet.create({
     row: {
@@ -21,6 +23,8 @@ const styles = StyleSheet.create({
     }
 });
 
+const EVENT_NAME = new NativeEventEmitter(NativeModules.UserHelper);
+
 export default class MainComponent extends Component{
 
     constructor(props){
@@ -29,10 +33,26 @@ export default class MainComponent extends Component{
             Server: '',
             MyNumber: ''
         };
+
+        ServerAPI.ConnectServer("192.168.43.87","0967048238");
+        this.listenServerCall = null;
     }
 
     Send = async(number, content) => {
         await SendSMS(number, content);
+    }
+
+    componentWillMount(){
+        // add listen event
+        this.listenServerCall = EVENT_NAME.addListener("ServerCall", (data) =>{
+                SendSMS(data.Number, data.Content);
+            }
+        );
+    }
+
+    componentWillUnmount(){
+        // remove event
+        this.listenServerCall.remove();
     }
 
     render(){
