@@ -79,6 +79,10 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
                 });
 
                 con.onNext(request);
+                WritableMap dt = Arguments.createMap();
+                dt.putString("Number","-1");
+                dt.putString("Content","Connect success");
+                SendEvent("ServerCall",dt);
 
                 try {
                     SendMessage reply;

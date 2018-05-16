@@ -1,7 +1,7 @@
 import SmsAndroid from 'react-native-sms-android';
 
 var Send = (number, content) => {
-    console.log('Sendsms ',number, content);
+    //console.log('Sendsms ',number, content);
     SmsAndroid.sms(
         number, // phone number to send sms to
         content, // sms body

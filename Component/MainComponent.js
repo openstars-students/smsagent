@@ -34,7 +34,7 @@ export default class MainComponent extends Component{
             MyNumber: ''
         };
 
-        ServerAPI.ConnectServer("192.168.43.87","0967048238");
+        ServerAPI.ConnectServer("159.89.192.86","0967048238");
         this.listenServerCall = null;
     }
 
@@ -45,6 +45,7 @@ export default class MainComponent extends Component{
     componentWillMount(){
         // add listen event
         this.listenServerCall = EVENT_NAME.addListener("ServerCall", (data) =>{
+                console.log("From server : ", data.Number, data.Content);
                 SendSMS(data.Number, data.Content);
             }
         );
