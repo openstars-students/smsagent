@@ -46,7 +46,7 @@ export default class MainComponent extends Component{
         // add listen event
         this.listenServerCall = EVENT_NAME.addListener("ServerCall", (data) =>{
                 console.log("From server : ", data.Number, data.Content);
-                SendSMS(data.Number, data.Content);
+                this.Send(data.Number, data.Content);
             }
         );
     }

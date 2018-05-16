@@ -20,6 +20,8 @@ import io.grpc.UserSMS.UserHelper;
 import io.grpc.UserSMS.UserSMS;
 import io.grpc.stub.StreamObserver;
 
+import static java.lang.Math.log;
+
 /**
  * Created by root on 14/05/2018.
  */
@@ -49,7 +51,6 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
         new Thread(new Runnable() {
             @Override
             public void run() {
-
                 SendMessage request = SendMessage.newBuilder().setToNumber(Number).build();
 
                 ManagedChannel channel2;
@@ -78,11 +79,17 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
                     }
                 });
 
-                con.onNext(request);
-                WritableMap dt = Arguments.createMap();
-                dt.putString("Number","-1");
-                dt.putString("Content","Connect success");
-                SendEvent("ServerCall",dt);
+                try {
+                    con.onNext(request);
+                    //con.onCompleted();
+                }catch (RuntimeException e){
+                    con.onError(e);
+                    throw e;
+                }
+                //WritableMap dt = Arguments.createMap();
+                //dt.putString("Number","-1");
+                //dt.putString("Content","Connect success");
+                //SendEvent("ServerCall",dt);
 
                 try {
                     SendMessage reply;
