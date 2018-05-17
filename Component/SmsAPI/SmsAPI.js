@@ -8,11 +8,10 @@ var Send = (number, content) => {
         'sendDirect', // sendDirect or sendIndirect
         (err, message) => {
             if (err){
-            console.log("error", err);
+                console.log("error", err);
             } else {
-            console.log(message); // callback message
+                console.log(message); // callback message
             }
-            console.log(message);
         }
     );
 }
