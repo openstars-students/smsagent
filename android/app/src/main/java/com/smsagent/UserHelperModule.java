@@ -32,6 +32,7 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
     public UserHelperModule(ReactApplicationContext reactcontext){
         super(reactcontext);
     }
+    private StreamObserver<SendMessage> curConnect = null;
 
     @Override
     public String getName() {
@@ -44,6 +45,14 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
 
     private void SendEvent(String eventName, int id){
         getReactApplicationContext().getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter.class).emit(eventName,id);
+    }
+
+    @ReactMethod
+    public void SendNoticeServer(String content){
+        SendMessage request = SendMessage.newBuilder().setContent(content).build();
+        if (curConnect!=null){
+            curConnect.onNext(request);
+        }
     }
 
     @ReactMethod
@@ -79,6 +88,7 @@ public class UserHelperModule extends ReactContextBaseJavaModule{
                     }
                 });
 
+                curConnect = con;
                 try {
                     con.onNext(request);
                     //con.onCompleted();
