@@ -31,10 +31,11 @@ export default class MainComponent extends Component{
         super(props);
         this.state = {
             Server: '',
-            MyNumber: ''
+            MyNumber: '',
+            StatusConnect: 'Chưa kết nối server'
         };
 
-        ServerAPI.ConnectServer("159.89.192.86","0967048238");
+        //ServerAPI.ConnectServer("192.168.43.230","0967048238");
         this.listenServerCall = null;
     }
 
@@ -42,10 +43,18 @@ export default class MainComponent extends Component{
         await SendSMS(number, content);
     }
 
+    Connect = () => {
+        ServerAPI.ConnectServer(this.state.Server, this.state.StatusConnect);
+    }
+
     componentWillMount(){
         // add listen event
         this.listenServerCall = EVENT_NAME.addListener("ServerCall", (data) =>{
                 console.log("From server : ", data.Number, data.Content);
+                if (data.Number == '' && data.Content == "connect_success"){
+                    this.setState({StatusConnect: 'Kết nối thành công'});
+                    return;
+                }
                 this.Send(data.Number, data.Content);
             }
         );
@@ -68,55 +77,57 @@ export default class MainComponent extends Component{
                 <View style={[{flexDirection: 'row'}, styles.row]}>
                     <Text style={styles.rowLeft}>IP Server</Text> 
                     <Item regular style={styles.rowRight}>
-                        <Input defaultValue={this.state.Number} keyboardType = 'numeric' value={this.state.Number} onChangeText={(z) => this.setState({Number: z}) }/>
+                        <Input defaultValue={this.state.Server} keyboardType = 'numeric' value={this.state.Server} onChangeText={(z) => this.setState({Server: z}) }/>
                     </Item>
                 </View>
                 <View style={[{flexDirection: 'row'}, styles.row]}>
                     <Text style={styles.rowLeft}>MyNumber</Text> 
                     <Item regular style={styles.rowRight}>
-                        <Input value={this.state.Content} onChangeText={(z) => this.setState({Content: z}) }/>
+                        <Input value={this.state.MyNumber} onChangeText={(z) => this.setState({MyNumber: z}) }/>
                     </Item>
                 </View>
                 
                 <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center', marginTop: 10}}>
-                    <Button iconLeft onPress = {() => this.Send(this.state.Number, this.state.Content)}>
+                    <Button iconLeft onPress = {() => this.Connect()}>
                         <Icon name='send' />
                         <Text style={{marginLeft: 10, marginRight: 20, color: 'white', fontSize: 16, fontWeight: 'bold'}}>Connect Server</Text>
                     </Button>
                 </View>
 
+                <Text style={{color:'black', marginTop: 10, fontSize: 15}}>{this.state.StatusConnect}</Text>
+
             </Container>
         );
 
-        return(
-            <Container>
-                <View style={{height: 50,marginTop: 20}}>
-                    <Text style={{textAlign:'center', fontSize: 30, fontWeight:'bold', color:'black'}}>
-                            SMS AGENT
-                    </Text>
-                </View>
-                <View style={[{flexDirection: 'row'}, styles.row]}>
-                    <Text style={styles.rowLeft}>Number</Text> 
-                    <Item regular style={styles.rowRight}>
-                        <Input defaultValue={this.state.Number} keyboardType = 'numeric' value={this.state.Number} onChangeText={(z) => this.setState({Number: z}) }/>
-                    </Item>
-                </View>
-                <View style={[{flexDirection: 'row'}, styles.row]}>
-                    <Text style={styles.rowLeft}>Content</Text> 
-                    <Item regular style={styles.rowRight}>
-                        <Input value={this.state.Content} onChangeText={(z) => this.setState({Content: z}) }/>
-                    </Item>
-                </View>
+        // return(
+        //     <Container>
+        //         <View style={{height: 50,marginTop: 20}}>
+        //             <Text style={{textAlign:'center', fontSize: 30, fontWeight:'bold', color:'black'}}>
+        //                     SMS AGENT
+        //             </Text>
+        //         </View>
+        //         <View style={[{flexDirection: 'row'}, styles.row]}>
+        //             <Text style={styles.rowLeft}>Number</Text> 
+        //             <Item regular style={styles.rowRight}>
+        //                 <Input defaultValue={this.state.Number} keyboardType = 'numeric' value={this.state.Number} onChangeText={(z) => this.setState({Number: z}) }/>
+        //             </Item>
+        //         </View>
+        //         <View style={[{flexDirection: 'row'}, styles.row]}>
+        //             <Text style={styles.rowLeft}>Content</Text> 
+        //             <Item regular style={styles.rowRight}>
+        //                 <Input value={this.state.Content} onChangeText={(z) => this.setState({Content: z}) }/>
+        //             </Item>
+        //         </View>
                 
-                <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center', marginTop: 10}}>
-                    <Button iconLeft success onPress = {() => this.Send(this.state.Number, this.state.Content)}>
-                        <Icon name='send' />
-                        <Text style={{marginLeft: 10, marginRight: 20, color: 'white', fontSize: 14}}>Send Sms</Text>
-                    </Button>
-                </View>
+        //         <View style={{flexDirection: 'row', alignItems: 'center', justifyContent:'center', marginTop: 10}}>
+        //             <Button iconLeft success onPress = {() => this.Send(this.state.Number, this.state.Content)}>
+        //                 <Icon name='send' />
+        //                 <Text style={{marginLeft: 10, marginRight: 20, color: 'white', fontSize: 14}}>Send Sms</Text>
+        //             </Button>
+        //         </View>
 
-                <Text>Status : {this.state.StatusSending}</Text>
-            </Container>
-        );
+        //         <Text>Status : {this.state.StatusSending}</Text>
+        //     </Container>
+        // );
     }
 }
