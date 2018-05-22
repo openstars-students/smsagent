@@ -12,7 +12,7 @@ var Send = (number, content) => {
                 send.SendNoticeServer("Error send SMS "+message);
             } else {
                 console.log(message); // callback message
-                send.SendNoticeServer("Send Success");
+                send.SendNoticeServer("success");
             }
         }
     );

@@ -44,7 +44,7 @@ export default class MainComponent extends Component{
     }
 
     Connect = () => {
-        ServerAPI.ConnectServer(this.state.Server, this.state.StatusConnect);
+        ServerAPI.ConnectServer(this.state.Server, this.state.MyNumber);
     }
 
     componentWillMount(){
